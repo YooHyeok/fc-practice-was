@@ -1,8 +1,6 @@
 package org.example.calculator.domain;
 
-import org.example.calculator.tobe.AdditionOperator;
-import org.example.calculator.tobe.ArithmeticOperator;
-import org.example.calculator.tobe.DivisionOperator;
+import org.example.calculator.tobe.*;
 
 import java.util.List;
 
