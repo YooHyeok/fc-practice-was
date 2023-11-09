@@ -12,7 +12,7 @@ public class RequestLine {
 
     private final String httpMethod;
     private final String urlPath;
-    private String queryString;
+    private QueryStrings queryString;
 
     public RequestLine(String requestLine) {
         String[] tokens = requestLine.split(" ");
@@ -21,14 +21,26 @@ public class RequestLine {
         String[] urlPathTokens = tokens[1].split("\\?");
         this.urlPath = urlPathTokens[0];
         if (urlPathTokens.length == 2) {
-            this.queryString = urlPathTokens[1];
+            this.queryString = new QueryStrings(urlPathTokens[1]);
         }
     }
 
     public RequestLine(String httpMethod, String urlPath, String queryString) {
         this.httpMethod = httpMethod;
         this.urlPath = urlPath;
-        this.queryString = queryString;
+        this.queryString = new QueryStrings(queryString);
+    }
+
+    public boolean isGetRequest() {
+        return this.httpMethod.equals("GET");
+    }
+
+    public boolean matchPath(String requestPath) {
+        return this.urlPath.equals(requestPath);
+    }
+
+    public QueryStrings getQueryStrings() {
+        return this.queryString;
     }
 
     @Override
