@@ -10,11 +10,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class CustomWebApplicationServer {
 
     private final int port;
-
+    private final ExecutorService excutorService = Executors.newFixedThreadPool(10); // 10개의 스레드풀 생성
     private static final Logger logger = LoggerFactory.getLogger(CustomWebApplicationServer.class);
 
     public CustomWebApplicationServer(int port) {
@@ -42,7 +44,7 @@ public class CustomWebApplicationServer {
                 /**
                  * step2 - 사용자의 요청이 들어올 때마다 Thread를 새로 생성해서 사용자 요청을 처리하도록 한다.
                  */
-                new Thread(new ClientRequestHandler(clientSocket)).start();
+//                new Thread(new ClientRequestHandler(clientSocket)).start(); // new client Thread-0 started
 
                 /**
                  * 사용자가 요청이 들어올 때 마다 스레드를 새로 생성하기 때문에 문제가 발생한다.
@@ -58,6 +60,10 @@ public class CustomWebApplicationServer {
                  * 보다 안정적인 서비스가 가능하도록 해야한다.
                  */
 
+                /**
+                 * step3 - Thread Pool을 적용해 안정적인 서비스가 되도록 한다.
+                 */
+                excutorService.execute(new ClientRequestHandler(clientSocket)); // new client pool-1-thread-1 started
             }
         }
     }
