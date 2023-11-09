@@ -3,9 +3,11 @@ package org.example;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
+import javax.xml.crypto.Data;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class CustomWebApplicationServer {
 
@@ -29,6 +31,35 @@ public class CustomWebApplicationServer {
              */
             while ((clientSocket = serverSocket.accept()) != null) {
                 logger.info("[CustomWebApplicationServer] client connected."); /*연결됨*/
+
+                /**
+                 * step1 - 사용자 요청을 메인 Thread가 처리하도록 한다.
+                 */
+                try (InputStream is = clientSocket.getInputStream(); OutputStream os = clientSocket.getOutputStream();) {
+                    /*
+                     * line by line으로 읽기위해 InputStream을 BufferedReader로 변환
+                     * inputStream을 UTF_8 형식으로 설정하여 InputStreamReader로 변환
+                     * 변환된 InputStreamReader를 다시 BufferedReader로 변환
+                     */
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
+                    DataOutputStream dos = new DataOutputStream(os);
+
+                    String line;
+                    while ((line = br.readLine()) != "") {
+                        System.out.println("line = " + line);
+                        /**
+                         * HttpRequest
+                         * - RequestLine : (GET /calculate?operand1=11&operator=*&operand2=55 Http/1.1)
+                         *      - HttpMethod : GET
+                         *      - path : /calculate?operand1=11&operator=*&operand2=55
+                         *      - queryString : ?operand1=11&operator=*&operand2=55
+                         * - Header
+                         * - Body
+                         */
+
+                    }
+
+                }
             }
         }
     }
