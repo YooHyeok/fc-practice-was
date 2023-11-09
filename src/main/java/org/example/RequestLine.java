@@ -17,7 +17,6 @@ public class RequestLine {
     public RequestLine(String requestLine) {
         String[] tokens = requestLine.split(" ");
         this.httpMethod = tokens[0];
-
         String[] urlPathTokens = tokens[1].split("\\?");
         this.urlPath = urlPathTokens[0];
         if (urlPathTokens.length == 2) {
